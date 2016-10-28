@@ -10,7 +10,7 @@ $result.animate({"scrollTop": $('#chat')[0].scrollHeight}, "slow");
 $("#user_connection").submit(function(){
 	
 	var username = $("#username").val();
-	alert(username);
+	
 	$.ajax({
 		type: "post",
 		url: "user_connection.jsp",
@@ -31,10 +31,10 @@ $("#user_connection").submit(function(){
 if (!!window.EventSource) {
 	// Subscribe to url to listen
 	var source = new EventSource('/chat/chat');
-	alert("source: " + source);
+	
 	// Define what to do when server sent new event
 	source.addEventListener("message", function(e) {
-		//alert("add event listener: " + source);
+
 		var el = document.getElementById("chat"); 
 		el.innerHTML += e.data + "<br/>";
 		el.scrollTop += 50;
@@ -54,9 +54,6 @@ function audioPlay(){
 // Send message to the server using AJAX call
 function sendMsg(form) {
 
-	if (form.msg.value.trim() == "") {
-		alert("Empty message!");
-	}
 	// Init http object
 	var http = false;
 	if (typeof ActiveXObject != "undefined") {
@@ -84,7 +81,6 @@ function sendMsg(form) {
 
 	// Prepare data
 	var parameters = "msg=" + encodeURIComponent(form.msg.value.trim());
-	
 	
 	
 	http.onreadystatechange = function () {
