@@ -15,12 +15,17 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+<!-- Bootstrap Select -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/i18n/defaults-*.min.js"></script>
+
+
 <!-- google Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Bungee+Inline" rel="stylesheet">
 
 <!-- Local -->
-<!-- <script type="text/javascript" src="js/jsfile.js"></script> -->
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css" type="text/css">
 <script type="text/javascript" src="js/jsfile.js"></script>
 
 </head>
@@ -43,34 +48,75 @@
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="talk_talk_collapse">
-    <form class="navbar-form navbar-left" id="user_connection">  
-        <div class="form-group">
-        	<div class="inner-addon left-addon">
-	          	<i class="glyphicon glyphicon-user"></i>
-	         	<input type="text" class="form-control" id="username" placeholder="User Name..." required autocomplete autofocus>
-        	</div>  
-        </div>
-        <div class="form-group">
-        	<div class="inner-addon left-addon">
-	          	<i class="glyphicon glyphicon-room"></i>
-	         	<input type="text" class="form-control" id="room" placeholder="Select Room..." autocomplete autofocus>
-        	</div>
-        </div>
-    </form>
-      
+    <div class="collapse navbar-collapse" style="text-align: center;" id="talk_talk_collapse">
+    <div id="user_connection_result">
+	    <form class="navbar-form" id="user_connection">
+		    <ul class="nav navbar-nav" style="display: inline-block; float: none;">
+		    	<li>
+		    		<div class="form-group">
+			        	<div class="inner-addon left-addon">
+				          	<i class="glyphicon glyphicon-user"></i>
+				         	<input type="text" class="form-control" id="username" placeholder="User Name..." required autocomplete autofocus>
+		        		</div>  
+		       	 	</div>
+		        </li>
+		        <li>
+		        	<div class="form-group">
+			        	 <select class="selectpicker" id="room" data-live-search="true" data-style="btn-info">
+			        	 <option>Click to choose Room</option>
+				         <optgroup label="Tora">
+				        	<option data-tokens="ToraRoom-1">ToraRoom-1</option>
+							<option data-tokens="ToraRoom-2">ToraRoom-2</option>
+							<option data-tokens="ToraRoom-3">ToraRoom-3</option> 
+				         </optgroup>
+						<optgroup label="Gmara">
+				        	<option data-tokens="GmaraRoom-1">GmaraRoom-1</option>
+							<option data-tokens="GmaraRoom-2">GmaraRoom-2</option>
+							<option data-tokens="GmaraRoom-3">GmaraRoom-3</option> 
+				         </optgroup>
+						<optgroup label="Mishna">
+				        	<option data-tokens="MishnaRoom-1">MishnaRoom-1</option>
+							<option data-tokens="MishnaRoom-2">MishnaRoom-2</option>
+							<option data-tokens="MishnaRoom-3">MishnaRoom-3</option> 
+				         </optgroup>
+						<optgroup label="Talmud">
+				        	<option data-tokens="TalmudRoom-1">TalmudRoom-1</option>
+							<option data-tokens="TalmudRoom-2">TalmudRoom-2</option>
+							<option data-tokens="TalmudRoom-3">TalmudRoom-3</option> 
+				         </optgroup>
+						<optgroup label="Havruta">
+				        	<option data-tokens="HavrutaRoom-1">HavrutaRoom-1</option>
+							<option data-tokens="HavrutaRoom-2">HavrutaRoom-2</option>
+							<option data-tokens="HavrutaRoom-3">HavrutaRoom-3</option> 
+				         </optgroup>
+						<optgroup label="Masechet">
+				        	<option data-tokens="MasechetRoom-1">MasechetRoom-1</option>
+							<option data-tokens="MasechetRoom-2">MasechetRoom-2</option>
+							<option data-tokens="MasechetRoom-3">MasechetRoom-3</option> 
+				         </optgroup>
+						</select>
+		       		</div>	
+		        </li>
+		        <li>
+		       		<input type="submit" class="form-control"> 
+		        </li>
+		    </ul>  
+	    </form>
+    </div>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-<div class="jumbotron text-center">
-	<h1 style="font-family: 'Bungee Inline', cursive;">Talk<span style="font-size: 80px;">2</span>Talk</h1>
-</div>
+
 
 
 	<div class="row">
 		
-		<div class="col-md-2"> </div>
-		<div class="col-md-8">
+		<div class="col-md-3"> </div>
+		<div class="col-md-6">
+		<div class="jumbotron text-center">
+			<h1 style="font-family: 'Bungee Inline', cursive;">Talk<span style="font-size: 80px;">2</span>Talk</h1>
+		</div>
+		
 		<div class="panel panel-info"> 
 			<div class="panel-heading panel-info"></div>
 			<div class="panel-body" style="height: 200px; overflow: auto;" id="chat">
@@ -97,7 +143,7 @@
 				</form>
 			</div>
 		</div>
-		<div class="col-md-2"> </div>
+		<div class="col-md-3"> </div>
 		
 	</div>
 	

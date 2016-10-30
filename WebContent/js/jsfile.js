@@ -10,17 +10,20 @@ $result.animate({"scrollTop": $('#chat')[0].scrollHeight}, "slow");
 $("#user_connection").submit(function(){
 	
 	var username = $("#username").val();
+	var room = $("#room").val();
 	
 	$.ajax({
 		type: "post",
 		url: "user_connection.jsp",
-		data: "username="+username,
+		data: "username="+username+"&room="+room,
 		success: function(data){
 			$("#user_connection")[0].reset();
 			document.getElementById("username").disabled = true;
+			document.getElementById("room").disabled = true;
 			document.getElementById("msg").disabled = false;
 			document.getElementById("msg").focus();
 			$(".panel-heading").html(data);
+			$("#user_connection_result").html(data);
 		}
 	});
 	
