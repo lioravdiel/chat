@@ -131,7 +131,7 @@ public class ChatServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// This is for loading home page when user comes for the first time
-		if (request.getAttribute("index") != null) {
+		if (request.getAttribute("success") != null) {
 			request.setAttribute("messages", messageStore);
 			request.getRequestDispatcher("/chat.jsp").forward(request, response);
 			return;
