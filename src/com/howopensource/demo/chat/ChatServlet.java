@@ -262,7 +262,7 @@ public class ChatServlet extends HttpServlet {
 	 */
 	private void sendMessage(PrintWriter writer, Message message) {
 		System.out.println("sendMessage...");
-		writer.print("<!doctype html>");
+		//writer.print("<!doctype html>");
 		writer.print("id: ");
 		writer.println(message.getId());
 		writer.print("data: ");
