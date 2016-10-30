@@ -1,4 +1,11 @@
-<%@ page language="java" session="false" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true" import="java.util.List, com.howopensource.demo.chat.Message"%>
+<%-- <%@ page language="java" session="false" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true" %>
+<%
+	request.setAttribute("index", true);
+	request.getRequestDispatcher("/chat").forward(request, response); 
+%>
+ --%>
+
+<%-- <%@ page language="java" session="false" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true" import="java.util.List, com.howopensource.demo.chat.Message"%>
 <!DOCTYPE html>
 
 <html lang="en">
@@ -153,3 +160,4 @@
 
 </body>
 </html>
+ --%>
