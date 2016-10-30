@@ -39,7 +39,7 @@ if (!!window.EventSource) {
 	source.addEventListener("message", function(e) {
 
 		var el = document.getElementById("chat"); 
-		el.innerHTML += e.data + "<br/>";
+		el.innerHTML += e.data + "<br>";
 		el.scrollTop += 50;
 		$result.animate({"scrollTop": $('#chat')[0].scrollHeight}, "slow");
 	}, false);
