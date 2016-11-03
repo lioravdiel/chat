@@ -125,13 +125,15 @@
 			// Quick and dirty way to print existing messages - better use JSTL
 			@SuppressWarnings("unchecked")
 			List<Message> messages = (List<Message>)request.getAttribute("messages");
-			for(Message msg : messages) { %>
-				<img src='images/user_profile.png' width='20px' height='20px'><span style='font-size: 9px; color:red;'>
-				<%= msg.getId() %>
-				</span><br>
-				<%= msg.getMessage()%>
-				<br><hr>
-			<%	}
+			if (messages!=null) {
+				for(Message msg : messages) { %>
+					<img src='images/user_profile.png' width='20px' height='20px'><span style='font-size: 9px; color:red;'>
+					<%= msg.getId() %>
+					</span><br>
+					<%= msg.getMessage()%>
+					<br><hr>
+				<%	}
+			}
 			%>
 			</div>
 			<div class="panel-footer">
