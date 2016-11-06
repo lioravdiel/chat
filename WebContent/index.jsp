@@ -54,8 +54,8 @@
     		</div>
     		<div class="form-group">
 	        	<div class="inner-addon left-addon">
-		          	<i class="glyphicon glyphicon-envelope"></i>
-		         	<input type="email" class="form-control" id="email" placeholder="Email..." required autocomplete autofocus>
+		          	<i class="glyphicon glyphicon-user"></i>
+		         	<input type="text" class="form-control" id="username" placeholder="User Name..." required autocomplete autofocus>
         		</div>  
        	 	</div>
     		<div class="form-group">

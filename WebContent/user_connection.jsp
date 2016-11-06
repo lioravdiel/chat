@@ -11,7 +11,7 @@
 	<%
 		String username = request.getParameter("username");
 		String room = request.getParameter("room");
-		session.setAttribute("username", username);
+		//session.setAttribute("username", username);
 		out.println("Hello " + username + ", you are in room: " + room);
 
 	%>

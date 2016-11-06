@@ -58,6 +58,7 @@ public class ChatServlet extends HttpServlet {
 	private boolean running;
 	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyy");
 	StringBuffer retString=new StringBuffer();
+	private static int sys_counter = 0;
 	
 	// Keeps all open connections from browsers
 	private Map<String, AsyncContext> asyncContexts = new ConcurrentHashMap<String, AsyncContext>();
@@ -77,7 +78,7 @@ public class ChatServlet extends HttpServlet {
 				try {
 					// Waits until a message arrives
 					Message message = messageQueue.take();
-					System.out.println("Thread running...");
+					System.out.println("Thread running..." + sys_counter++);
 					// Put a message in a store
 					messageStore.add(message);
 
@@ -106,6 +107,7 @@ public class ChatServlet extends HttpServlet {
 	@Override
 	public void destroy() {
 		// Stops thread and clears queue and stores
+		System.out.println("destroy..." + sys_counter++);
 		running = false;
 		asyncContexts.clear();
 		messageQueue.clear();
@@ -123,7 +125,7 @@ public class ChatServlet extends HttpServlet {
 		// Start thread
 		running = true;
 		notifier.start();
-		System.out.println("initialize...");
+		System.out.println("initialize..."+sys_counter++);
 	}
 
 
@@ -136,7 +138,7 @@ public class ChatServlet extends HttpServlet {
 			request.getRequestDispatcher("/chat.jsp").forward(request, response);
 			return;
 		}
-		System.out.println("doGet...");
+		System.out.println("doGet..."+sys_counter++);
 		// Check that it is SSE request
 		if ("text/event-stream".equals(request.getHeader("Accept"))) {
 
@@ -225,7 +227,7 @@ public class ChatServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		System.out.println("doPost...");
+		System.out.println("doPost..."+sys_counter++);
 		// Sets char encoding - should not be done here, better in filter
 		request.setCharacterEncoding("UTF-8");
 
@@ -261,7 +263,7 @@ public class ChatServlet extends HttpServlet {
 	 * @param message
 	 */
 	private void sendMessage(PrintWriter writer, Message message) {
-		System.out.println("sendMessage...");
+		System.out.println("sendMessage..."+sys_counter++);
 		//writer.print("<!doctype html>");
 		writer.print("id: ");
 		writer.println(message.getId());

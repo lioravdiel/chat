@@ -10,7 +10,7 @@
 <body>
 <%
 	request.getSession().getAttribute("userename");
-	request.setAttribute("index", true);
+	request.setAttribute("success", true);
 	request.getRequestDispatcher("/chat").forward(request, response); 
 %>
 

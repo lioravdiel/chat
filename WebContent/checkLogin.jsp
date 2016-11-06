@@ -10,15 +10,17 @@
 
 
 	<%
-		String email = request.getParameter("email");
+		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		
-		String dbEmail = "lior@avdiel.com";
+		String dbuser = "toot";
 		String dbPassword = "123";
 		
-		if (email.equalsIgnoreCase(dbEmail) && password.equalsIgnoreCase(dbPassword)){
-			request.setAttribute("success", true);
-			request.getRequestDispatcher("/chat").forward(request, response);  
+		if (username.equalsIgnoreCase(dbuser) && password.equalsIgnoreCase(dbPassword)){
+			//request.setAttribute("success", true);
+			//request.getRequestDispatcher("/chat").forward(request, response);
+			session.setAttribute("username", username);
+			out.print(username);
 		}else{
 			out.print("error");
 		}
