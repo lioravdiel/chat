@@ -28,12 +28,15 @@ public class Message {
 
 	private long id;
 	private String message;
+	private String sender;
+	
 
 
-	public Message(long id, String message) {
+	public Message(long id, String message,String sender) {
 		super();
 		this.id = id;
 		this.message = message;
+		this.sender = sender;
 	}
 
 
@@ -44,6 +47,16 @@ public class Message {
 
 	public String getMessage() {
 		return message;
+	}
+
+
+	public String getSender() {
+		return sender;
+	}
+
+
+	public void setSender(String sender) {
+		this.sender = sender;
 	}
 
 }

@@ -1,4 +1,3 @@
-  
 <%@ page language="java" session="false" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true" import="java.util.List, com.howopensource.demo.chat.Message"%>
 
 <!DOCTYPE html>
@@ -8,6 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <title>Talk2Talk</title>
+
 
 <!-- JQuery -->
 <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
@@ -24,6 +24,7 @@
 
 <!-- Local -->
 <link rel="stylesheet" href="css/style.css" type="text/css">
+<link rel="stylesheet" href="css/back.css" type="text/css">
 <script type="text/javascript" src="js/login.js"></script>
 
 </head>
@@ -47,27 +48,27 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" style="text-align: center;" id="talk_talk_collapse">
-    <div id="user_login_result">
+    
 	    <form class="navbar-form" style="display: inline-block; float:right;" id="user_login">
-    		<div class="form-group">
-    			<h4 style="font-family: 'Bungee Inline', cursive;">Log<span style="font-size: 20px;">2</span>In</h4>
-    		</div>
-    		<div class="form-group">
-	        	<div class="inner-addon left-addon">
-		          	<i class="glyphicon glyphicon-user"></i>
-		         	<input type="text" class="form-control" id="username" placeholder="User Name..." required autocomplete autofocus>
-        		</div>  
-       	 	</div>
-    		<div class="form-group">
-	        	<div class="inner-addon left-addon">
-		          	<i class="glyphicon glyphicon-qrcode"></i>
-		         	<input type="password" class="form-control" id="password" placeholder="Password..." required autocomplete autofocus>
-        		</div>  
-       	 	</div>
-      		<button type="submit" class="form-control btn btn-info"><span class="glyphicon glyphicon-send"></span></button>
-      		<div id="user_login_result"></div>
+	    	 
+	    		<!-- <img src="images/loading.gif" id="gif" style="display: block; margin: 0 auto; width:10px; visibility:hidden;"> -->
+	    		<div class="form-group">
+	    			<h4 style="font-family: 'Bungee Inline', cursive;">Log<span style="font-size: 20px;">2</span>In</h4>
+	    		</div>
+	    		<div class="form-group">
+		        	<div class="inner-addon left-addon">
+			          	<i class="glyphicon glyphicon-user"></i>
+			         	<input type="text" class="form-control" id="username" placeholder="User Name..." required autocomplete autofocus>
+	        		</div>  
+	       	 	</div>
+	    		<div class="form-group">
+		        	<div class="inner-addon left-addon">
+			          	<i class="glyphicon glyphicon-qrcode"></i>
+			         	<input type="password" class="form-control" id="password" placeholder="Password..." required autocomplete autofocus>
+	        		</div>  
+	       	 	</div>
+	      		<button type="submit" class="form-control btn btn-info"><span class="glyphicon glyphicon-send"></span></button> 
 	    </form>
-    </div>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
@@ -79,6 +80,7 @@
 		<div class="col-md-3"> </div>
 		<div class="col-md-6">
 		<div class="jumbotron text-center">
+			
 			<h1 style="font-family: 'Bungee Inline', cursive;">Talk<span style="font-size: 80px;">2</span>Talk</h1>
 			<h3 style="font-family: 'Bungee Inline', cursive;">Sign<span style="font-size: 50px;">2</span>In</h3>
 			
@@ -110,7 +112,12 @@
 		</div>
 		
 		<div class="col-md-3"> </div>
-		
+		<div class="row">
+			<!-- spacing -->
+			<div class="col-md-3">
+				<div id="user_login_result" style="width: 300px; height: 300px; background-image: url('images/loading.gif'); visibility: hidden; background-repeat: no-repeat;"></div>
+			</div>	
+		</div>
 	</div>
 	
 </div>

@@ -1,0 +1,5 @@
+@CHARSET "windows-1255";
+
+#user_login_result {
+    position: absolute; width: auto; height: auto; background-image: url('../images/loading.gif'); visibility: visible;
+}
