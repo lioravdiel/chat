@@ -22,16 +22,8 @@ package com.howopensource.demo.chat;
 
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicLong;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.AsyncEvent;
@@ -54,62 +46,29 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/chat")
 public class ChatServlet extends HttpServlet {
 
-	private AtomicLong counter = new AtomicLong();
-	private boolean running;
+	RoomsManager roomsManager;
+	//private boolean running;
 	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyy");
 	StringBuffer retString=new StringBuffer();
 	
-	// Keeps all open connections from browsers
-	private Map<String, AsyncContext> asyncContexts = new ConcurrentHashMap<String, AsyncContext>();
-
 	// Temporary store for messages when arrived
-	private BlockingQueue<Message> messageQueue = new LinkedBlockingQueue<Message>();
+	//private BlockingQueue<Message> messageQueue = new LinkedBlockingQueue<Message>();
 
 	// Keep last messages
-	private List<Message> messageStore = new CopyOnWriteArrayList<Message>();
-
-	// Thread that waits for new message and then redistribute it
-	private Thread notifier = new Thread(new Runnable() {
-
-		@Override
-		public void run() {
-			while (running) {
-				try {
-					// Waits until a message arrives
-					Message message = messageQueue.take();
-					System.out.println("Thread running...");
-					// Put a message in a store
-					messageStore.add(message);
-
-					// Keep only last 100 messages
-					if (messageStore.size() > 100) {
-						messageStore.remove(0);
-					}
-
-					// Sends the message to all the AsyncContext's response
-					for (AsyncContext asyncContext : asyncContexts.values()) {
-						try {
-							sendMessage(asyncContext.getResponse().getWriter(), message);
-						} catch (Exception e) {
-							// In case of exception remove context from map
-							asyncContexts.values().remove(asyncContext);
-						}
-					}
-				} catch (InterruptedException e) {
-					// Log exception, etc.
-				}
-			}
-		}
-	});
+	//private List<Message> messageStore = new CopyOnWriteArrayList<Message>();
 
 
 	@Override
 	public void destroy() {
 		// Stops thread and clears queue and stores
-		running = false;
-		asyncContexts.clear();
-		messageQueue.clear();
-		messageStore.clear();
+		roomsManager.getRooms().forEach((key,room)->
+			{
+				room.getMessageQueue().clear();
+				room.getMessageStore().clear();
+				room.getAsyncContexts().clear();
+				room.setRunning(false);
+			}
+		);
 	}
 
 
@@ -119,24 +78,34 @@ public class ChatServlet extends HttpServlet {
 
 		// Load previous messages from DB into messageStore
 		// messageStore.addAll(db.loadMessages(100));
-
+		roomsManager=RoomsManager.getInstance();
 		// Start thread
-		running = true;
-		notifier.start();
 		System.out.println("initialize...");
 	}
 
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		// This is for loading home page when user comes for the first time
-		if (request.getAttribute("success") != null) {
-			request.setAttribute("messages", messageStore);
+		System.out.println("doGet...");
+		String roomName=(String)request.getSession().getAttribute("room");
+		//String roomName=(String)request.getParameter("room");
+		System.out.println("request room: "+roomName);
+		Room room=roomsManager.getRoom(roomName);
+		
+		
+		if (room==null) {
 			request.getRequestDispatcher("/chat.jsp").forward(request, response);
 			return;
 		}
-		System.out.println("doGet...");
+		request.setAttribute("room", roomName);
+		System.out.println("room: "+room.getName()+" roomId:"+room.getId());
+		// This is for loading home page when user comes for the first time
+		if (request.getAttribute("success") != null) {
+			request.setAttribute("messages", room.getMessageStore());
+			request.getRequestDispatcher("/chat.jsp").forward(request, response);
+			return;
+		}
+		
 		// Check that it is SSE request
 		if ("text/event-stream".equals(request.getHeader("Accept"))) {
 
@@ -160,16 +129,16 @@ public class ChatServlet extends HttpServlet {
 				}
 				if (lastId > 0) {
 					// Send all messages that are not send - e.g. with higher id
-					for (Message message : messageStore) {
+					for (Message message : room.getMessageStore()) {
 						if (message.getId() > lastId) {
-							sendMessage(response.getWriter(), message);
+							ChatUtils.sendMessage(response.getWriter(), message);
 						}
 					}
 				}
 			} else {
 				long lastId = 0;
 				try {
-					lastId = messageStore.get(messageStore.size() - 1).getId();
+					lastId = room.getMessageStore().get(room.getMessageStore().size() - 1).getId();
 				} catch (Exception e) {
 					// Do nothing as this just gets the last id
 				}
@@ -179,40 +148,11 @@ public class ChatServlet extends HttpServlet {
 					// fails to reopen it after 1000 milliseconds
 					response.getWriter().println("retry: 1000\n");
 					Message message = new Message(lastId, "Welcome to chat, type message and press Enter to send it.");
-					sendMessage(response.getWriter(), message);
+					ChatUtils.sendMessage(response.getWriter(), message);
 				}
 			}
+			ChatUtils.addAsyncContext(request, room);
 
-			// Generate some unique identifier used to store context in map
-			final String id = UUID.randomUUID().toString();
-
-			// Start asynchronous context and add listeners to remove it in case of errors
-			final AsyncContext ac = request.startAsync();
-			ac.addListener(new AsyncListener() {
-
-				@Override
-				public void onComplete(AsyncEvent event) throws IOException {
-					asyncContexts.remove(id);
-				}
-
-				@Override
-				public void onError(AsyncEvent event) throws IOException {
-					asyncContexts.remove(id);
-				}
-
-				@Override
-				public void onStartAsync(AsyncEvent event) throws IOException {
-					// Do nothing
-				}
-
-				@Override
-				public void onTimeout(AsyncEvent event) throws IOException {
-					asyncContexts.remove(id);
-				}
-			});
-
-			// Put context in a map
-			asyncContexts.put(id, ac);
 		}
 	}
 
@@ -226,6 +166,8 @@ public class ChatServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		System.out.println("doPost...");
+		String roomName=(String)request.getSession().getAttribute("room");
+		Room room=roomsManager.getRoom(roomName);
 		// Sets char encoding - should not be done here, better in filter
 		request.setCharacterEncoding("UTF-8");
 
@@ -234,44 +176,19 @@ public class ChatServlet extends HttpServlet {
 
 		// Do some verification and save message into DB, etc.
 		if ((message != null) && !message.trim().isEmpty()) {
-			try {
-				if (message.equals("#clear")) {
-					messageQueue.clear();
-					messageStore.clear();
-					return;
-				}
-
-				// Save message
-				// db.saveMessage(message);
-
-				// Create new simple message
-				Message msg = new Message(counter.incrementAndGet(), message.trim());
-				// Put message into messageQueue
-				messageQueue.put(msg);
-			} catch (InterruptedException e) {
-				throw new IOException(e);
+		
+			if (message.equals("#clear")) {
+				room.getMessageQueue().clear();
+				room.getMessageStore().clear();
+				return;
 			}
+			// Save message
+			// db.saveMessage(message);
+				// Create new simple message
+			//Message msg = new Message(counter.incrementAndGet(), message.trim());
+			// Put message into messageQueue
+			//room.getMessageQueue().put(msg);
+			room.addMessage(message);
 		}
 	}
-
-
-	/**
-	 * Sends messages to client in SSE format.
-	 * @param writer
-	 * @param message
-	 */
-	private void sendMessage(PrintWriter writer, Message message) {
-		System.out.println("sendMessage...");
-		//writer.print("<!doctype html>");
-		writer.print("id: ");
-		writer.println(message.getId());
-		writer.print("data: ");
-		String msg = message.getMessage();
-		char firstChar = Character.toUpperCase(msg.charAt(0));
-	 	msg = firstChar + msg.substring(1);
-		writer.println("<img src='images/user_profile.png' width='20px' height='20px'><span style='font-size: 9px; color:red;'>" + message.getId() + "</span><br>"+ msg + "<br><hr>");
-		writer.println();
-		writer.flush();
-	}
-
 }

@@ -1,6 +1,9 @@
 /**
  * 
  */
+
+
+
 $(document).ready(function(){
 //Scroll To Bottom
 var $result = $('#chat');
@@ -11,12 +14,14 @@ $("#user_connection").submit(function(){
 	
 	var username = $("#username").val();
 	var room = $("#room").val();
-	
+	var sessionId = $("#sessionId").val();
+	alert(sessionId);
 	$.ajax({
 		type: "post",
-		url: "user_connection.jsp",
-		data: "username="+username+"&room="+room,
+		url: "/chat/room",
+		data: "username="+username+"&room="+room+"&sessionId="+sessionId,
 		success: function(data){
+			//alert('!');
 			$("#user_connection")[0].reset();
 			document.getElementById("username").disabled = true;
 			document.getElementById("room").disabled = true;
@@ -24,39 +29,40 @@ $("#user_connection").submit(function(){
 			document.getElementById("msg").focus();
 			$(".panel-heading").html(data);
 			$("#user_connection_result").html(data);
-		}
+			// Check that browser supports EventSource 
+			if (!!window.EventSource) {
+				// Subscribe to url to listen
+				var source = new EventSource('/chat/chat?sessionId'+sessionId);
+				
+				// Define what to do when server sent new event
+				source.addEventListener("message", function(e) {
+
+					var el = document.getElementById("chat"); 
+					el.innerHTML += e.data + "<br/>";
+					el.scrollTop += 50;
+					$result.animate({"scrollTop": $('#chat')[0].scrollHeight}, "slow");
+				}, false);
+				
+			} else {
+				alert("Your browser does not support EventSource!");
+			}
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+	        alert(xhr.status);
+	        alert(thrownError);
+	      }
+	
 	});
 	
 	return false;
 });
 
-// Check that browser supports EventSource 
-if (!!window.EventSource) {
-	// Subscribe to url to listen
-	var source = new EventSource('/chat/chat');
-	
-	// Define what to do when server sent new event
-	source.addEventListener("message", function(e) {
-
-		var el = document.getElementById("chat"); 
-		el.innerHTML += e.data + "<br>";
-		el.scrollTop += 50;
-		$result.animate({"scrollTop": $('#chat')[0].scrollHeight}, "slow");
-	}, false);
-} else {
-	alert("Your browser does not support EventSource!");
-}
-
 });
 
-function audioPlay(){
-    document.getElementById("sirine").play();
-    return false;
-}
 
-// Send message to the server using AJAX call
+//Send message to the server using AJAX call
 function sendMsg(form) {
-
+	alert("!");
 	// Init http object
 	var http = false;
 	if (typeof ActiveXObject != "undefined") {
@@ -84,7 +90,7 @@ function sendMsg(form) {
 
 	// Prepare data
 	var parameters = "msg=" + encodeURIComponent(form.msg.value.trim());
-	
+	parameters=parameters+"&sessionId="+$("#sessionId").val();
 	
 	http.onreadystatechange = function () {
 		if (http.readyState == 4 && http.status == 200) {
@@ -101,3 +107,10 @@ function sendMsg(form) {
 
 	return false;
 }
+
+
+function audioPlay(){
+    document.getElementById("sirine").play();
+    return false;
+}
+

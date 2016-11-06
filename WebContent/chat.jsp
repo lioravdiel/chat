@@ -1,4 +1,11 @@
-<%@ page language="java" session="false" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true" import="java.util.List, com.howopensource.demo.chat.Message"%>
+<%@ page language="java" session="true" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true" import="java.util.List, com.howopensource.demo.chat.Message"%>
+<%
+if(session.getAttribute("username")==null)
+{
+	response.sendRedirect("index.jsp");
+}
+%>
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -51,16 +58,12 @@
     <div class="collapse navbar-collapse" style="text-align: center;" id="talk_talk_collapse">
     <div id="user_connection_result">
 	    <form class="navbar-form" id="user_connection">
-		    <ul class="nav navbar-nav" style="display: inline-block; float: none;">
-		    	<li>
 		    		<div class="form-group">
 			        	<div class="inner-addon left-addon">
 				          	<i class="glyphicon glyphicon-user"></i>
 				         	<input type="text" class="form-control" id="username" placeholder="User Name..." required autocomplete autofocus>
 		        		</div>  
 		       	 	</div>
-		        </li>
-		        <li>
 		        	<div class="form-group">
 			        	 <select class="selectpicker" id="room" data-live-search="true" data-style="btn-info">
 			        	 <option>Click to choose Room</option>
@@ -96,18 +99,15 @@
 				         </optgroup>
 						</select>
 		       		</div>	
-		        </li>
-		        <li>
-		       		<input type="submit" class="form-control"> 
-		        </li>
-		    </ul>  
+		        	<button type="submit" class="form-control btn btn-info">GO!</button>
+		        	 
+		      
 	    </form>
+	    
     </div>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-
-
 
 	<div class="row">
 		
@@ -127,16 +127,15 @@
 			List<Message> messages = (List<Message>)request.getAttribute("messages");
 			if (messages!=null) {
 				for(Message msg : messages) { %>
-					<img src='images/user_profile.png' width='20px' height='20px'><span style='font-size: 9px; color:red;'>
-					<%= msg.getId() %>
-					</span><br>
 					<%= msg.getMessage()%>
-					<br><hr>
+					
+					
 				<%	}
 			}
 			%>
 			</div>
 			<div class="panel-footer">
+				<input hidden="hidden" id="sessionId" name="sessionId" value="<%= request.getAttribute("SESSION_ID") %>"/>
 				<form id="msgForm" action="/chat/chat" method="post" onsubmit="return sendMsg(this); audioPlay();"> 
 			        <div class="inner-addon left-addon">
 	          			<i class="glyphicon glyphicon-send"></i>
@@ -147,7 +146,9 @@
 				</form>
 			</div>
 		</div>
-		<div class="col-md-3"> </div>
+		<div class="col-md-3"> 
+		<a href="logout.jsp"><button type="submit" class="form-control btn btn-info"><span class="glyphicon glyphicon-off"></span></button></a>
+		</div>
 		
 	</div>
 	
