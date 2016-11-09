@@ -1,4 +1,4 @@
-<%@ page language="java" session="false" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true" import="java.util.List, com.howopensource.demo.chat.Message"%>
+<%@ page language="java" session="false" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true" import="java.util.List, com.chat.Message"%>
 <!DOCTYPE html>
 
 <html lang="en">
@@ -49,22 +49,12 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" style="text-align: center;" id="talk_talk_collapse">
-    <div id="user_connection_result">
+    <div id="user_connection_result"> 
 	    <form class="navbar-form" id="user_connection">
 		    <%
 		    	String username = (String)request.getSession().getAttribute("username"); 
 		    %>
-		    <!-- <ul class="nav navbar-nav" style="display: inline-block; float: none;"> -->
-		    	<!-- <li>
-		    		<div class="form-group">
-			        	<div class="inner-addon left-addon">
-				          	<i class="glyphicon glyphicon-user"></i>
-				         	<input type="text" class="form-control" id="username" placeholder="User Name..." required autocomplete autofocus>
-		        		</div>  
-		       	 	</div>
-		        </li> -->
-		        <!-- <li> -->
-		        	<input type="hidden" id="username" value="<%=username %>">
+		       	<input type="hidden" id="username" value="<%=username %>">
 		        	<div class="form-group">
 			        	 <select class="selectpicker" id="room" data-live-search="true" data-style="btn-info">
 			        	 <option>Click to choose Room</option>
@@ -100,11 +90,8 @@
 				         </optgroup>
 						</select>
 		       		</div>	
-		        <!-- </li>
-		        <li> -->
-		       		<input type="submit" class="form-control"> 
-		        <!-- </li> 
-		    </ul>  -->
+		       		<input type="submit" class="form-control">  
+		       		<a href="logout.jsp"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-off"></span></button></a>
 	    </form>
     </div>
     </div><!-- /.navbar-collapse -->

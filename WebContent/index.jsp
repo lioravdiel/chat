@@ -1,4 +1,4 @@
-<%@ page language="java" session="false" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true" import="java.util.List, com.howopensource.demo.chat.Message"%>
+<%@ page language="java" session="false" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true" import="java.util.List, com.chat.Message"%>
 
 <!DOCTYPE html>
 
@@ -26,6 +26,7 @@
 <link rel="stylesheet" href="css/style.css" type="text/css">
 <link rel="stylesheet" href="css/back.css" type="text/css">
 <script type="text/javascript" src="js/login.js"></script>
+<script type="text/javascript" src="js/signin.js"></script>
 
 </head>
 
@@ -82,7 +83,7 @@
 		<div class="jumbotron text-center">
 			
 			<h1 style="font-family: 'Bungee Inline', cursive;">Talk<span style="font-size: 80px;">2</span>Talk</h1>
-			<h3 style="font-family: 'Bungee Inline', cursive;">Sign<span style="font-size: 50px;">2</span>In</h3>
+			<h3 style="font-family: 'Bungee Inline', cursive;">Sign<span style="font-size: 50px;">2</span>Up</h3>
 			
 			<form class="form" id="user_signin">
 			    <div class="row">
@@ -91,14 +92,26 @@
 			    	
 			    		<div class="form-group">
 				        	<div class="inner-addon left-addon">
+					          	<i class="glyphicon glyphicon-user"></i>
+					         	<input type="text" class="form-control" id="uname" placeholder="User Name..." required autocomplete autofocus>
+			        		</div>  
+			       	 	</div>
+			    		<div class="form-group">
+				        	<div class="inner-addon left-addon">
 					          	<i class="glyphicon glyphicon-envelope"></i>
 					         	<input type="email" class="form-control" id="email" placeholder="Email..." required autocomplete autofocus>
+			        		</div>  
+			       	 	</div>
+			       	 	<div class="form-group">
+				        	<div class="inner-addon left-addon">
+					          	<i class="glyphicon glyphicon-time"></i>
+					         	<input type="number" class="form-control" id="age" placeholder="Age..." required autocomplete autofocus>
 			        		</div>  
 			       	 	</div>
 			        	<div class="form-group">
 				        	<div class="inner-addon left-addon">
 					          	<i class="glyphicon glyphicon-qrcode"></i>
-					         	<input type="password" class="form-control" id="password" placeholder="Password..." required autocomplete autofocus>
+					         	<input type="password" class="form-control" id="upass" placeholder="Password..." required autocomplete autofocus>
 			        		</div>  
 			       	 	</div>
 			        	<div class="form-group">

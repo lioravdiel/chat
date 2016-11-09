@@ -15,21 +15,20 @@ $("#user_connection").submit(function(){
 	var username = $("#username").val();
 	var room = $("#room").val();
 	var sessionId = $("#sessionId").val();
-	//alert(sessionId);
-	//alert(room);
+	alert(username);
 	$.ajax({
 		type: "post",
 		url: "/chat/room",
-		data: "username="+username+"&room="+room,
+		data: "username="+username+"&room="+room+"&sessionId="+sessionId,
 		success: function(data){
-			//alert('!');
+			alert(username);
 			$("#user_connection")[0].reset();
-			document.getElementById("username").disabled = true;
 			document.getElementById("room").disabled = true;
+			document.getAttribute("disabled").disabled = true;
 			document.getElementById("msg").disabled = false;
 			document.getElementById("msg").focus();
 			$(".panel-heading").html(data);
-			$("#user_connection_result").html(data);
+			//$("#user_connection_result").html(data);
 			// Check that browser supports EventSource 
 			if (!!window.EventSource) {
 				// Subscribe to url to listen
