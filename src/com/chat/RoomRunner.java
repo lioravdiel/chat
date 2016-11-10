@@ -9,7 +9,7 @@ public class RoomRunner implements Runnable{
 	}
 	@Override
 	public void run() {
-		while (room.isRunning()) {
+		/*while (room.isRunning()) {
 			try {
 				// Waits until a message arrives
 				Message message = room.getMessageQueue().take();
@@ -37,7 +37,7 @@ public class RoomRunner implements Runnable{
 			} catch (InterruptedException e) {
 				// Log exception, etc.
 			}
-		}
+		}*/
 	}
 
 }

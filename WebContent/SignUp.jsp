@@ -3,11 +3,11 @@
 
 	<%
 		String username = request.getParameter("username");
+		String email = request.getParameter("email");
+		int age = Integer.parseInt(request.getParameter("age"));
 		String password = request.getParameter("password");
 		
-		if(Config.checkValidationLogin(username, password))
-			out.print(username);
-		else
-			out.print("ERROR");
-		
+		Config.insertToUsersTable(username, email, password, age);
+		out.println(username);
+	
 	%>

@@ -14,20 +14,20 @@ public class RoomServlet extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		System.out.println("doPost...");
+		System.out.println("RoomServlet doPost...");
 		String userName = request.getParameter("username");
 		String roomName = request.getParameter("room");
-		request.getSession().setAttribute("username", userName);
-		//request.getSession().setAttribute("room", roomName);
-		System.out.println("userName:"+userName+"  room:"+roomName+" session:"+(String)request.getSession().getAttribute("SESSION_ID"));
+		String sessionId = (String)request.getParameter("sessionId");
+
+		System.out.println("userName:"+userName+"  room:"+roomName+" session:"+sessionId);
 		
 		RoomsManager roomsManager=RoomsManager.getInstance();
-		if (roomsManager.getRoom(roomName)==null) {
-			Room newRoom=roomsManager.addRoom(roomName, userName);
-			Thread th=new Thread(new RoomRunner(newRoom));
-			th.start();
+		Room room=roomsManager.getRoom(roomName);
+		if (room==null) {
+			room=roomsManager.addRoom(roomName, userName);
 		}
-		roomsManager.getSessionRoomMap().put((String)request.getSession().getAttribute("SESSION_ID"), roomName);
+		roomsManager.addSessionInfo(sessionId, userName, room);
+		response.getWriter().println(roomName);
 	}
 
 }

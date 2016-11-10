@@ -14,7 +14,7 @@
 	String username=request.getParameter("username");
 	session.setMaxInactiveInterval(24 * 60 * 60);
 	session.setAttribute("username",username);
-	session.setAttribute("SESSION_ID",java.util.UUID.randomUUID().toString());
+	session.setAttribute("sessionId",java.util.UUID.randomUUID().toString());
 	request.setAttribute("success", true);
 	request.getRequestDispatcher("/chat").forward(request, response);
 	%>

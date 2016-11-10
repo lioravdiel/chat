@@ -26,7 +26,7 @@
 <link rel="stylesheet" href="css/style.css" type="text/css">
 <link rel="stylesheet" href="css/back.css" type="text/css">
 <script type="text/javascript" src="js/login.js"></script>
-<script type="text/javascript" src="js/signin.js"></script>
+<script type="text/javascript" src="js/signup.js"></script>
 
 </head>
 
@@ -49,7 +49,8 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" style="text-align: center;" id="talk_talk_collapse">
-    
+    	
+    	<!-- User Login -->
 	    <form class="navbar-form" style="display: inline-block; float:right;" id="user_login">
 	    	 
 	    		<!-- <img src="images/loading.gif" id="gif" style="display: block; margin: 0 auto; width:10px; visibility:hidden;"> -->
@@ -85,7 +86,8 @@
 			<h1 style="font-family: 'Bungee Inline', cursive;">Talk<span style="font-size: 80px;">2</span>Talk</h1>
 			<h3 style="font-family: 'Bungee Inline', cursive;">Sign<span style="font-size: 50px;">2</span>Up</h3>
 			
-			<form class="form" id="user_signin">
+			<!-- User SignUp -->
+			<form class="form" id="user_signun">
 			    <div class="row">
 			    	<div class="col-lg-4"></div>
 			    	<div class="col-lg-4">

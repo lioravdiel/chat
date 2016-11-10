@@ -9,7 +9,7 @@ import javax.servlet.AsyncEvent;
 import javax.servlet.http.HttpServletRequest;
 
 public class ChatUtils {
-	public static void sendMessage(PrintWriter writer,Message message) {
+	/*public static void sendMessage(PrintWriter writer,Message message) {
 		//System.out.println("sendMessage..."+sys_counter++);
 		//writer.print("<!doctype html>");
 		writer.print("id: ");
@@ -50,4 +50,4 @@ public class ChatUtils {
 		// Put context in a map
 		room.getAsyncContexts().put(id, ac);
 	}
-}
+*/}

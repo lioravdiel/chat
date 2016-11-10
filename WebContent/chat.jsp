@@ -1,3 +1,4 @@
+<%@page import="com.chat.ChatServlet"%>
 <%@ page language="java" session="false" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true" import="java.util.List, com.chat.Message"%>
 <!DOCTYPE html>
 
@@ -5,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-<title>Java SSE Chat Example</title>
+<title>Talk2Talk</title>
 
 <!-- JQuery -->
 <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
@@ -26,7 +27,7 @@
 
 <!-- Local -->
 <link rel="stylesheet" href="css/style.css" type="text/css">
-<script type="text/javascript" src="js/jsfile.js"></script>
+<script type="text/javascript" src="js/room_connection.js"></script>
 
 </head>
 
@@ -50,11 +51,14 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" style="text-align: center;" id="talk_talk_collapse">
     <div id="user_connection_result"> 
-	    <form class="navbar-form" id="user_connection">
+	    <form class="navbar-form" id="roomConnection">
 		    <%
-		    	String username = (String)request.getSession().getAttribute("username"); 
+		    	String username = (String)request.getSession().getAttribute("username");
+		    	String sessionId = (String)request.getSession().getAttribute("sessionId");
 		    %>
 		       	<input type="hidden" id="username" value="<%=username %>">
+		       	<input type="hidden" id="sessionId" value="<%=sessionId %>">
+		       	
 		        	<div class="form-group">
 			        	 <select class="selectpicker" id="room" data-live-search="true" data-style="btn-info">
 			        	 <option>Click to choose Room</option>
@@ -90,7 +94,7 @@
 				         </optgroup>
 						</select>
 		       		</div>	
-		       		<input type="submit" class="form-control">  
+		       		<input type="submit" id="roomSubmit" class="form-control">  
 		       		<a href="logout.jsp"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-off"></span></button></a>
 	    </form>
     </div>
@@ -116,7 +120,9 @@
 			// Quick and dirty way to print existing messages - better use JSTL
 			@SuppressWarnings("unchecked")
 			List<Message> messages = (List<Message>)request.getAttribute("messages");
+			
 			if (messages!=null) {
+				%><script>alert('messages: ' + <%=messages%>)</script> <%
 				for(Message msg : messages) { %>
 					<img src='images/user_profile.png' width='20px' height='20px'><span style='font-size: 9px; color:red;'>
 					<%= msg.getId() %>

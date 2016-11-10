@@ -98,6 +98,44 @@ public class Config {
 		
 	}
 	
+	public static boolean checkValidationLogin(String username, String password){
+		
+		Connection con = null;
+		Statement st = null;
+		String sql = null;
+		String dbUser, dbPass;
+		
+		boolean valid = false;
+		
+		try {
+		    con = Config.getConnection();
+		    
+		    st = con.createStatement();
+			
+			sql = "select username, password from users";
+			
+			ResultSet rs = st.executeQuery(sql);
+			
+			while (rs.next()) {
+				dbUser = rs.getString("username");
+				dbPass = rs.getString("password");
+				
+				if(dbUser.equalsIgnoreCase(username) && dbPass.equalsIgnoreCase(password)){
+					valid = true;
+				}
+			}
+			
+			rs.close();
+			Config.closeConnection(con, st);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		
+		return valid;
+	}
+	
 	public static void closeConnection(Connection con, Statement st){
 		
 		try {

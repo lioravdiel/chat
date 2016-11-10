@@ -7,14 +7,15 @@ public class RoomsManager {
 	private static RoomsManager me;
 	private HashMap<String,Room> rooms;
 	private AtomicLong roomId;
-	private HashMap<String,String> sessionRoomMap;
+	private HashMap<String,AppSessionContext> sessionInfoMap;
 	private RoomsManager() {
 		rooms=new HashMap<String,Room>();
-		sessionRoomMap=new HashMap<String,String>();
+		sessionInfoMap=new HashMap<String,AppSessionContext>();
 		roomId = new AtomicLong();
 	}
 	
 	public static RoomsManager getInstance() {
+		System.out.println("RommsManager getInstance...");
 		if (me==null) {
 			me=new RoomsManager();
 		}
@@ -25,8 +26,8 @@ public class RoomsManager {
 		return rooms;
 	}
 
-	public HashMap<String, String> getSessionRoomMap() {
-		return sessionRoomMap;
+	public HashMap<String, AppSessionContext> getSessionInfoMap() {
+		return sessionInfoMap;
 	}
 	
 	public Room getRoom(String name) {
@@ -38,4 +39,9 @@ public class RoomsManager {
 		this.rooms.put(name, room);
 		return room;
 	}
+	
+	public void addSessionInfo(String sessionId,String userName,Room room) {
+		getSessionInfoMap().put(sessionId, new AppSessionContext(userName, room));
+	}
+	
 }
