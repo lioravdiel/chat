@@ -11,13 +11,22 @@ import java.sql.Statement;
 public class Config {
 
 	
+	private static String work_path = "C:/Users/DMJ834/workspace/chat/USERS.db";
+	private static String home_path = "C:/workspace_JavaEE/chat/USERS.db";
+	private static String dbpath = null;
+	
 	public static Connection getConnection(){
 		
 		Connection con = null; 
 		
+		if(System.getenv("USERNAME").equalsIgnoreCase("dmj834"))
+			dbpath = work_path;
+		else
+			dbpath = home_path;
+		
 		try {
 			Class.forName("org.sqlite.JDBC");
-			con = DriverManager.getConnection("jdbc:sqlite:C:/workspace_JavaEE/chat/USERS.db");
+			con = DriverManager.getConnection("jdbc:sqlite:"+dbpath);
 			
 		} catch (Exception e) {
 			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -184,7 +193,6 @@ public class Config {
 		
 		return param;
 	}
-	
 	
 	
 	/*public static void main(String[] args) {

@@ -29,6 +29,7 @@
 <!-- Local -->
 <link rel="stylesheet" href="css/style.css" type="text/css">
 <script type="text/javascript" src="js/room_connection.js"></script>
+<script type="text/javascript" src="js/upload_image_file"></script>
 
 </head>
 
@@ -128,14 +129,29 @@
 		<!-- user profile -->
 		<div class="col-md-3">
 			<div class="jumbotron" style="height: 500px;">
-				<img src="images/<%=myImageProfile %>" width="100" height="100" class="img-circle" style="text-align: center;">
-				<h4 style="font-family: 'Bungee Inline', cursive;"><%=username%></h4>
+				<div style="width: 182px;height: 121px; line-height: 20px;display:inline-block;position:relative;">
+					<img src="images/<%=myImageProfile %>" width="130" height="130" class="img-circle"><br>
+					<button style="position:absolute;bottom:0px;right:62px;" type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target=".change_image_profile">
+						<span class="glyphicon glyphicon-camera"></span>
+					</button>
+				</div>
+				<div class="modal fade change_image_profile" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+				  <div class="modal-dialog modal-sm" role="document">
+				    <div class="modal-content">
+				       <form action="uploadServlet" method="post" enctype="multipart/form-data"></form>
+		                File: <input type="file" id="image_file" name="image_file" class="form-control"><br>
+		                <input type="submit" value="upload" name="upload" id="upload" class="form-control"> 
+				    </div>
+				  </div>
+				</div>
+				
+				<h4 style="margin-left: 15px; font-family: 'Bungee Inline', cursive;"><%=username%></h4>
 				<p style="font-family: 'Josefin Sans', sans-serif; font-size: 17px;">first name: <%=firstname %></p>
 				<p style="font-family: 'Josefin Sans', sans-serif; font-size: 17px;">last name: <%=lastname %></p>
 				<p style="font-family: 'Josefin Sans', sans-serif; font-size: 17px;">nick name: <%=username %>
 				<p style="font-family: 'Josefin Sans', sans-serif; font-size: 17px;">email: <%=email %></p>
 				<p style="font-family: 'Josefin Sans', sans-serif; font-size: 17px;">age: <%=age %></p>
-							
+				<a href="#configuration"><span class="glyphicon glyphicon-cog"></span></a>		
 			</div>
 			
 			<!-- chat status -->
