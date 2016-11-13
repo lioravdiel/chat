@@ -1,6 +1,7 @@
 
 package com.chat;
 
+import java.util.Date;
 
 /**
  * This class represents simple message with just two attributes - id and message.
@@ -11,15 +12,17 @@ public class Message {
 	private String message;
 	private String sender;
 	private String roomName;
+	private String date;
 	
 
 
-	public Message(long id, String message,String sender,String roomName) {
+	public Message(long id, String message,String sender,String roomName, String date) {
 		super();
 		this.id = id;
 		this.message = message;
 		this.sender = sender;
 		this.roomName = roomName;
+		this.date = date;
 	}
 
 
@@ -51,6 +54,15 @@ public class Message {
 	public void setRoomName(String roomName) {
 		this.roomName = roomName;
 	}
-	
+
+
+	public String getDate() {
+		return date;
+	}
+
+
+	public void setDate(String date) {
+		this.date = date;
+	}
 
 }

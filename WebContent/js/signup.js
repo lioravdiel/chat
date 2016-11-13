@@ -5,7 +5,9 @@
 $(document).ready(function(){
 	
 	$("#user_signun").submit(function(){
-	
+		
+		var firstname = $("#firstname").val();
+		var lastname = $("#lastname").val();
 		var username = $("#uname").val();
 		var email = $("#email").val();
 		var age = $("#age").val();
@@ -16,7 +18,7 @@ $(document).ready(function(){
 		this.timer = setTimeout(function () {
 		$.ajax({
 			url: "SignUp.jsp",
-			data: "username="+username +"&email="+email+"&age="+age+"&password="+password,
+			data: "firstname="+firstname+"&lastname="+lastname+"&username="+username +"&email="+email+"&age="+age+"&password="+password,
 			type: "post",
 			success: function(msg){
 			

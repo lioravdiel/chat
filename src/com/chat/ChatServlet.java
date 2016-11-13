@@ -4,7 +4,9 @@ package com.chat;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -38,7 +40,8 @@ public class ChatServlet extends HttpServlet {
 	RoomsManager roomsManager;
 	private boolean running;
 	private AtomicLong counter = new AtomicLong();
-	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyy");
+	Date date = new Date();
+	
 	StringBuffer retString=new StringBuffer();
 	
 	volatile Map<String, RoomContext> asyncContexts=new ConcurrentHashMap<String, RoomContext>();
@@ -63,7 +66,7 @@ public class ChatServlet extends HttpServlet {
 						System.out.println("ChatServlet Thread running...");
 						// Put a message in a store
 						messageStore.add(message);
-						System.out.println("messageStore: " + messageStore.size());
+						System.out.println("messageStore: " + messageStore.get(0).getMessage());
 						// Keep only last 100 messages
 						if (messageStore.size() > 100) {
 							messageStore.remove(0);
@@ -118,8 +121,8 @@ public class ChatServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("ChatServlet doGet... session: " + (String)request.getParameter("sessionId"));
-		AppSessionContext appContext=roomsManager.getSessionInfoMap().get((String)request.getParameter("sessionId"));
+		System.out.println("ChatServlet doGet... session: " + (String)request.getSession().getAttribute("sessionId"));
+		AppSessionContext appContext=roomsManager.getSessionInfoMap().get((String)request.getSession().getAttribute("sessionId"));
 		System.out.println("ChatServlet doGet... appcontext: " + appContext);
 		if (null==appContext) {
 			System.out.println("ChatServlet doGet - dispaching to chat.jsp");
@@ -140,7 +143,7 @@ public class ChatServlet extends HttpServlet {
 		}
 		
 		// Check that it is SSE request
-		if ("text/event-stream".equals(request.getHeader("Accept"))) {
+		if ("text/event-stream".equalsIgnoreCase(request.getHeader("Accept"))) {
 			System.out.println("ChatServlet event-stream");
 			// This a Tomcat specific - makes request asynchronous
 			request.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
@@ -180,7 +183,7 @@ public class ChatServlet extends HttpServlet {
 					// which is the last event id. Also tell the browser if connection
 					// fails to reopen it after 1000 milliseconds
 					response.getWriter().println("retry: 1000\n");
-					Message message = new Message(lastId, "Welcome to chat, type message and press Enter to send it.","system",roomName);
+					Message message = new Message(lastId, "Welcome to chat, type message and press Enter to send it.","system",roomName, DateFormat.getInstance().format(date));
 					sendMessage(response.getWriter(), message);
 				}
 			}
@@ -228,7 +231,8 @@ public class ChatServlet extends HttpServlet {
 		System.out.println("ChatServlet doPost...");
 		AppSessionContext appContext=roomsManager.getSessionInfoMap().get((String)request.getParameter("sessionId"));
 		String roomName=appContext.getRoom().getName();
-		String userName=appContext.getUserName();		
+		String userName=appContext.getUserName();
+
 		// Sets char encoding - should not be done here, better in filter
 		request.setCharacterEncoding("UTF-8");
 
@@ -247,7 +251,7 @@ public class ChatServlet extends HttpServlet {
 			// db.saveMessage(message);
 				// Create new simple message
 			System.out.println("Send message from roomName:"+roomName);
-			Message msg = new Message(counter.incrementAndGet(), message.trim(),userName,roomName);
+			Message msg = new Message(counter.incrementAndGet(), message.trim(),userName,roomName,  DateFormat.getInstance().format(date));
 			this.messageQueue.add(msg);
 			// Put message into messageQueue
 			//room.getMessageQueue().put(msg);
@@ -257,15 +261,20 @@ public class ChatServlet extends HttpServlet {
 	
 	public static void sendMessage(PrintWriter writer,Message message) {
 		System.out.println("ChatServlet sendMessage...");
-		//writer.print("<!doctype html>");
+		String myImageProfile = Config.getMyInfo("img", message.getSender());
+		/*writer.print("<!DOCTYPE html>");*/
 		writer.print("id: ");
 		writer.println(message.getId());
 		writer.print("data: ");
 		String msg = message.getMessage();
 		char firstChar = Character.toUpperCase(msg.charAt(0));
 	 	msg = firstChar + msg.substring(1);
-		writer.println("<img src='images/user_profile.png' width='20px' height='20px'><span style='font-size: 9px; color:red;'>[" + message.getId() + "]"+message.getSender()+":</span><br>"+ msg + "<br><hr>");
-		writer.println();
+	 	StringBuffer buffer = new StringBuffer();
+	 	buffer.append("<img src='images/" + myImageProfile +"' width='20px' class='img-circle' height='20px'>&nbsp&nbsp<span style='font-size: 12px; color:green;'>"+message.getSender()+"</span>");
+		buffer.append("<h4 style='background-image: url('../speech-bubble.png');>"+ msg + "</h4>");
+	 	buffer.append("<span style='font-size: 9px; color:green;'>" + message.getDate() + "</span><hr>");
+		writer.println(buffer.toString());
+	 	writer.println();
 		writer.flush();
 	}
 	

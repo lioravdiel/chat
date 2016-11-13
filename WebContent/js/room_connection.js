@@ -23,16 +23,16 @@ $("#roomConnection").submit(function(){
 		success: function(data){
 			
 			$("#roomConnection")[0].reset();
-			document.getElementById("room").disabled = true;
-			document.getElementById("roomSubmit").disabled = true;
+			document.getElementById("room").hidden = true;
+			document.getElementById("roomSubmit").hidden = true;
 			document.getElementById("msg").disabled = false;
 			document.getElementById("msg").focus();
 			$(".panel-heading").html(data);
-			//$("#user_connection_result").html(data);
+			$("#chat_status_result").html("You just connect to : " + data);
 			// Check that browser supports EventSource 
 			if (!!window.EventSource) {
 				// Subscribe to url to listen
-				var source = new EventSource('/chat/chat');
+				var source = new EventSource("/chat/chat");
 				
 				// Define what to do when server sent new event
 				source.addEventListener("message", function(e) {
@@ -62,7 +62,7 @@ $("#roomConnection").submit(function(){
 
 //Send message to the server using AJAX call
 function sendMsg(form) {
-	//alert("!");
+	
 	// Init http object
 	var http = false;
 	if (typeof ActiveXObject != "undefined") {

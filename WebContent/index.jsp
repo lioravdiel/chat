@@ -91,8 +91,19 @@
 			    <div class="row">
 			    	<div class="col-lg-4"></div>
 			    	<div class="col-lg-4">
-			    	
-			    		<div class="form-group">
+			    	 	<div class="form-group">
+				        	<div class="inner-addon left-addon">
+					          	<i class="glyphicon glyphicon-user"></i>
+					         	<input type="text" class="form-control" id="firstname" placeholder="First Name..." required autocomplete autofocus>
+			        		</div>  
+			       	 	</div>
+			       	 	<div class="form-group">
+				        	<div class="inner-addon left-addon">
+					          	<i class="glyphicon glyphicon-user"></i>
+					         	<input type="text" class="form-control" id="lastname" placeholder="Last Name..." required autocomplete autofocus>
+			        		</div>  
+			       	 	</div>
+			       	 	<div class="form-group">
 				        	<div class="inner-addon left-addon">
 					          	<i class="glyphicon glyphicon-user"></i>
 					         	<input type="text" class="form-control" id="uname" placeholder="User Name..." required autocomplete autofocus>

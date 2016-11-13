@@ -1,3 +1,4 @@
+<%@page import="com.chat.Config"%>
 <%@page import="com.chat.ChatServlet"%>
 <%@ page language="java" session="false" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true" import="java.util.List, com.chat.Message"%>
 <!DOCTYPE html>
@@ -19,11 +20,11 @@
 <!-- Bootstrap Select -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/i18n/defaults-*.min.js"></script>
 
 
 <!-- google Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Bungee+Inline" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
 
 <!-- Local -->
 <link rel="stylesheet" href="css/style.css" type="text/css">
@@ -32,6 +33,21 @@
 </head>
 
 <body>
+
+ <%
+	String username = (String)request.getSession().getAttribute("username");
+	String sessionId = (String)request.getSession().getAttribute("sessionId");
+		
+	String myImageProfile = Config.getMyInfo("img", username);
+	if(myImageProfile.isEmpty()){
+		myImageProfile = "anonymous_profile.png";
+	}
+	
+	String firstname = Config.getMyInfo("firstname", username);
+	String lastname = Config.getMyInfo("lastname", username);
+	String email = Config.getMyInfo("email", username);
+	String age = Config.getMyInfo("age", username);
+%>
 
 <div class="container-fluid">
 <nav class="navbar navbar-default">
@@ -45,17 +61,17 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.jsp" style="font-family: 'Bungee Inline', cursive;">Talk<span style="font-size: 28px;">2</span>Talk</a>
+      <a class="navbar-brand" href="chat.jsp" style="font-family: 'Bungee Inline', cursive;">Talk<span style="font-size: 28px;">2</span>Talk</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" style="text-align: center;" id="talk_talk_collapse">
-    <div id="user_connection_result"> 
-	    <form class="navbar-form" id="roomConnection">
-		    <%
-		    	String username = (String)request.getSession().getAttribute("username");
-		    	String sessionId = (String)request.getSession().getAttribute("sessionId");
-		    %>
+    	 <ul class="nav navbar-nav">
+	      <li class="navbar-brand" style="font-family: 'Bungee Inline', cursive; margin-top: 3px;"><%=username %></li>
+	      <img src="images/<%=myImageProfile %>" width="50" height="50" class="img-circle" style="margin-top: 2px;">
+	    </ul>
+        <form class="navbar-form" id="roomConnection">
+		   
 		       	<input type="hidden" id="username" value="<%=username %>">
 		       	<input type="hidden" id="sessionId" value="<%=sessionId %>">
 		       	
@@ -97,7 +113,7 @@
 		       		<input type="submit" id="roomSubmit" class="form-control">  
 		       		<a href="logout.jsp"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-off"></span></button></a>
 	    </form>
-    </div>
+    
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
@@ -106,25 +122,45 @@
 
 	<div class="row">
 		
-		<div class="col-md-3"> </div>
-		<div class="col-md-6">
-		<div class="jumbotron text-center">
-			<h1 style="font-family: 'Bungee Inline', cursive;">Talk<span style="font-size: 80px;">2</span>Talk</h1>
+		<!-- spacer -->
+		<div class="col-md-2"> </div>
+		
+		<!-- user profile -->
+		<div class="col-md-3">
+			<div class="jumbotron" style="height: 500px;">
+				<img src="images/<%=myImageProfile %>" width="100" height="100" class="img-circle" style="text-align: center;">
+				<h4 style="font-family: 'Bungee Inline', cursive;"><%=username%></h4>
+				<p style="font-family: 'Josefin Sans', sans-serif; font-size: 17px;">first name: <%=firstname %></p>
+				<p style="font-family: 'Josefin Sans', sans-serif; font-size: 17px;">last name: <%=lastname %></p>
+				<p style="font-family: 'Josefin Sans', sans-serif; font-size: 17px;">nick name: <%=username %>
+				<p style="font-family: 'Josefin Sans', sans-serif; font-size: 17px;">email: <%=email %></p>
+				<p style="font-family: 'Josefin Sans', sans-serif; font-size: 17px;">age: <%=age %></p>
+							
+			</div>
+			
+			<!-- chat status -->
+			<div class="jumbotron" style="height: 170px;">
+				<h4 style="font-family: 'Bungee Inline', cursive;">Chat Status</h4>
+				<div id="chat_status_result"></div>
+			</div>
 		</div>
+		<!-- chat -->
+		<div class="col-md-5">
+		<div class="jumbotron">
+			<h3 style="font-family: 'Bungee Inline', cursive; text-align: center;">Chat<span style="font-size: 50px;">2</span>Room</h3>
 		
 		<div class="panel panel-info"> 
-			<div class="panel-heading panel-info"></div>
-			<div class="panel-body" style="height: 200px; overflow: auto;" id="chat">
+			<div class="panel-heading panel-info">Room</div>
+			<div class="panel-body" style="height: 400px; overflow: auto;" id="chat">
 			
 			<%
 			// Quick and dirty way to print existing messages - better use JSTL
 			@SuppressWarnings("unchecked")
 			List<Message> messages = (List<Message>)request.getAttribute("messages");
-			
 			if (messages!=null) {
-				%><script>alert('messages: ' + <%=messages%>)</script> <%
+				
 				for(Message msg : messages) { %>
-					<img src='images/user_profile.png' width='20px' height='20px'><span style='font-size: 9px; color:red;'>
+					<img src='images/<%=myImageProfile %>' width='20px' height='20px'><span style='font-size: 9px; color:red;'>
 					<%= msg.getId() %>
 					</span><br>
 					<%= msg.getMessage()%>
@@ -134,7 +170,7 @@
 			%>
 			</div>
 			<div class="panel-footer">
-				<form id="msgForm" action="/chat/chat" method="post" onsubmit="return sendMsg(this); audioPlay();"> 
+				<form id="msgForm" action="/chat/chat" method="post" onsubmit="return sendMsg(this);"> 
 			        <div class="inner-addon left-addon">
 	          			<i class="glyphicon glyphicon-send"></i>
 	         			<input type="text" class="form-control" id="msg" name="msg" placeholder="What you think?..." disabled required>
@@ -143,8 +179,12 @@
 
 				</form>
 			</div>
+			</div>
+		
 		</div>
-		<div class="col-md-3"> </div>
+		
+		<!-- spacer -->
+		<div class="col-md-2"> </div>
 		
 	</div>
 	

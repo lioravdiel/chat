@@ -17,7 +17,7 @@ public class Config {
 		
 		try {
 			Class.forName("org.sqlite.JDBC");
-			con = DriverManager.getConnection("jdbc:sqlite:C:/Users/DMJ834/workspace/chat/USERS.db");
+			con = DriverManager.getConnection("jdbc:sqlite:C:/workspace_JavaEE/chat/USERS.db");
 			
 		} catch (Exception e) {
 			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -55,7 +55,14 @@ public class Config {
 			ResultSet tableExists = dbm.getTables(null, null, "USERS", null);
 			
 			if (!tableExists.next()){
-				sql = "CREATE TABLE `"+ tableName +"` (`USERID` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,`USERNAME` CHAR(50) NOT NULL,`EMAIL` CHAR(50) NOT NULL,`PASSWORD` CHAR(50) NOT NULL,`AGE`	INT NOT NULL)";
+				sql = "CREATE TABLE `"+ tableName +"` (`USERID` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+						+ "`FIRSTNAME` CHAR(50) NOT NULL,"
+						+ "`LASTNAME` CHAR(50) NOT NULL,"
+						+ "`USERNAME` CHAR(50) NOT NULL,"
+						+ "`EMAIL` CHAR(50) NOT NULL,"
+						+ "`PASSWORD` CHAR(50) NOT NULL,"
+						+ "`IMG` BLOB NOT NULL,"
+						+ "`AGE` INT NOT NULL)";
 				
 				st.executeUpdate(sql);
 				
@@ -72,7 +79,7 @@ public class Config {
 		
 	}
 	
-	public static void insertToUsersTable(String username, String email, String password, int age) {
+	public static void insertToUsersTable(String firstname, String lastname, String username, String email, String password, int age) {
 		Connection con = null;
 		Statement st = null;
 		String sql = null;
@@ -84,7 +91,7 @@ public class Config {
 			
 		    st = con.createStatement();
 			
-			sql = "INSERT INTO `USERS` VALUES (null,'"+username+"','"+email+"','"+password+"',"+age+")";
+			sql = "INSERT INTO `USERS` VALUES (null,'"+firstname+"','"+lastname+"','"+username+"','"+email+"','"+password+"','anonymous_profile.png',"+age+")";
 			
 			st.executeUpdate(sql);
 			con.commit();
@@ -147,11 +154,43 @@ public class Config {
 		}
 		
 	}
+
+	public static String getMyInfo(String param, String username){
+		Connection con = null;
+		Statement st = null;
+		String sql = null;
+		
+		try {
+		    con = Config.getConnection();
+		    
+		    st = con.createStatement();
+			
+			sql = "select `" + param + "` from users where username = '" + username + "'";
+			
+			
+			ResultSet rs = st.executeQuery(sql);
+			
+			while (rs.next()) {
+				param = rs.getString(param);
+			}
+			
+			rs.close();
+			Config.closeConnection(con, st);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		
+		return param;
+	}
+	
+	
 	
 	/*public static void main(String[] args) {
 		
 		Config.createTable("USERS");
-		Config.insertToUsersTable("toot", "lior@avdiel.com", "123", 123);
+		//Config.insertToUsersTable("toot", "lior@avdiel.com", "123", 123);
 	}
 	*/
 }
